@@ -1,4 +1,6 @@
-﻿namespace WebContract
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebContract
 {
     public class WebModel
     {

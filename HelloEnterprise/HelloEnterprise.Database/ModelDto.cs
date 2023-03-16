@@ -1,6 +1,6 @@
 ﻿namespace Database
 {
-    public class ModelDTO
+    public class ModelDto
     {
         public string Data { get; set; }
 
