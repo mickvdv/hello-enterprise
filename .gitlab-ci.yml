@@ -7,13 +7,14 @@ variables:
     KANIKO_IMAGE: gcr.io/kaniko-project/executor:v1.9.1-debug
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
+image:
+  name: ${KANIKO_IMAGE}
+  entrypoint: [""]
 
 before_script:
 - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"},\"$CI_DEPENDENCY_PROXY_SERVER\":{\"auth\":\"$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
 
-image:
-  name: ${KANIKO_IMAGE}
-  entrypoint: [""]
+
 
 build:dotnet:
 
@@ -38,4 +39,4 @@ publish:WebAPI:
     --context ${SOLUTION_DIRECTORY}
     --dockerfile ${DOCKER_FILE}
     --destination ${DOCKER_IMAGE}:${TAG_VERSION}
-    --build-arg BASE_IMAGE=${BUILD_IMAGE}
+    --build-arg BUILD_IMAGE=${BUILD_IMAGE}
