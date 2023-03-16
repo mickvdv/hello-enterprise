@@ -27,7 +27,6 @@ publish:WebAPI:
     --destination ${DOCKER_REPO}/web-api:${TAG_VERSION}
     --build-arg BUILD_IMAGE=${BUILD_IMAGE}
 
-
 publish:BackgroundJob:
   needs: ["build:dotnet"]
   script:
@@ -35,4 +34,13 @@ publish:BackgroundJob:
     --context ${SOLUTION_DIRECTORY}
     --dockerfile ${SOLUTION_DIRECTORY}/HelloEnterprise.BackgroundJob/Dockerfile
     --destination ${DOCKER_REPO}/background-job:${TAG_VERSION}
+    --build-arg BUILD_IMAGE=${BUILD_IMAGE}
+
+publish:Frontend:
+  needs: ["build:dotnet"]
+  script:
+  - /kaniko/executor 
+    --context ${SOLUTION_DIRECTORY}
+    --dockerfile ${SOLUTION_DIRECTORY}/HelloEnterprise.Frontend/Server/Dockerfile
+    --destination ${DOCKER_REPO}/frontend:${TAG_VERSION}
     --build-arg BUILD_IMAGE=${BUILD_IMAGE}
