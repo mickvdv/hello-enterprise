@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HelloEnterprise.Domain\HelloEnterprise.Domain.csproj" />
-    <ProjectReference Include="..\HelloEnterprise.WebAPI\HelloEnterprise.WebAPI.csproj" />
     <ProjectReference Include="..\HelloEnterprise.WebContract\HelloEnterprise.WebContract.csproj" />
   </ItemGroup>
 </Project>
