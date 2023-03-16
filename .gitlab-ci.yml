@@ -4,7 +4,7 @@ variables:
     TAG_VERSION: '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}'
     
     DOCKER_REPO: registry.gitlab.com/mickvdv/hello-microservice
-    KANIKO_IMAGE: gcr.io/kaniko-project/executor:latest
+    KANIKO_IMAGE: gcr.io/kaniko-project/executor:latest-debug
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
 
