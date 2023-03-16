@@ -4,12 +4,15 @@ variables:
     TAG_VERSION: '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}'
     
     DOCKER_REPO: registry.gitlab.com/mickvdv/hello-microservice
-    BUILDER_IMAGE: docker
+    BUILDER_IMAGE: docker:stable
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
 
 stages:
 - build
+
+services:
+  - docker:stable
 
 build:dotnet:
   stage: build
