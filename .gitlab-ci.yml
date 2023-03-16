@@ -1,14 +1,11 @@
 variables:
     SOLUTION_DIRECTORY: '${CI_PROJECT_DIR}/HelloEnterprise'
-
     TAG_VERSION: '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}'
-    
     DOCKER_REPO: registry.gitlab.com/mickvdv/hello-microservice
-    KANIKO_IMAGE: gcr.io/kaniko-project/executor:v1.9.1-debug
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
 image:
-  name: ${KANIKO_IMAGE}
+  name: gcr.io/kaniko-project/executor:v1.9.1-debug
   entrypoint: [""]
 
 before_script:
@@ -28,4 +25,14 @@ publish:WebAPI:
     --context ${SOLUTION_DIRECTORY}
     --dockerfile ${SOLUTION_DIRECTORY}/HelloEnterprise.WebAPI/Dockerfile
     --destination ${DOCKER_REPO}/web-api:${TAG_VERSION}
+    --build-arg BUILD_IMAGE=${BUILD_IMAGE}
+
+
+publish:BackgroundJob:
+  needs: ["build:dotnet"]
+  script:
+  - /kaniko/executor 
+    --context ${SOLUTION_DIRECTORY}
+    --dockerfile ${SOLUTION_DIRECTORY}/HelloEnterprise.BackgroundJob/Dockerfile
+    --destination ${DOCKER_REPO}/background-job:${TAG_VERSION}
     --build-arg BUILD_IMAGE=${BUILD_IMAGE}
