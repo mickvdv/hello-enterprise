@@ -41,4 +41,4 @@ publish:WebAPI:
     --context ${SOLUTION_DIRECTORY}
     --dockerfile ${DOCKER_FILE}
     --destination ${DOCKER_IMAGE}:${TAG_VERSION}
-    --build-arg BASE_IMAGE=${BUILD_BASEIMAGE}
+    --build-arg BASE_IMAGE=${BUILD_IMAGE}
