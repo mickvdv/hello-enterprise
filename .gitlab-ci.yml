@@ -4,28 +4,25 @@ variables:
     TAG_VERSION: '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}'
     
     DOCKER_REPO: registry.gitlab.com/mickvdv/hello-microservice
-    BUILDER_IMAGE: docker
+    KANIKO_IMAGE: gcr.io/kaniko-project/executor:v1.9.1-debug
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
 
 stages:
 - build
 
-services:
-- docker:dind
-
-before_script:
-
-
 build:dotnet:
   stage: build
-  image: ${BUILDER_IMAGE}
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
   variables:
     DOCKER_FILE: "${SOLUTION_DIRECTORY}/Dockerfile"
   script:
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build --file ${DOCKER_FILE} -t ${BUILD_IMAGE} ${SOLUTION_DIRECTORY} 
-    - docker push ${BUILD_IMAGE}
+    - /kaniko/executor 
+      --context ${SOLUTION_DIRECTORY}
+      --dockerfile ${DOCKER_FILE}
+      --destination ${BUILD_IMAGE}
 
 publish:WebAPI:
   needs: ["build:dotnet"]
@@ -33,7 +30,10 @@ publish:WebAPI:
     DOCKER_FILE: "${SOLUTION_DIRECTORY}/HelloEnterprise.WebApi/Dockerfile"
     DOCKER_IMAGE: "${DOCKER_REPO}/web-api"
   stage: build
-  image: ${BUILDER_IMAGE}
+  image: ${KANIKO_IMAGE}
   script:
-  - docker build --file ${DOCKER_FILE} -t ${DOCKER_IMAGE} ${SOLUTION_DIRECTORY}
-  - docker push ${DOCKER_IMAGE}
+  - /kaniko/executor 
+    --context ${SOLUTION_DIRECTORY}
+    --dockerfile ${DOCKER_FILE}
+    --destination ${DOCKER_IMAGE}:${TAG_VERSION}
+    --build-arg BASE_IMAGE=${BUILD_BASEIMAGE}
