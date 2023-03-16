@@ -14,8 +14,6 @@ stages:
 before_script:
 - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"},\"$CI_DEPENDENCY_PROXY_SERVER\":{\"auth\":\"$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
 
-
-
 build:dotnet:
   stage: build
   image:
@@ -32,7 +30,7 @@ build:dotnet:
 publish:WebAPI:
   needs: ["build:dotnet"]
   variables:
-    DOCKER_FILE: "${SOLUTION_DIRECTORY}/HelloEnterprise.WebApi/Dockerfile"
+    DOCKER_FILE: "${SOLUTION_DIRECTORY}/HelloEnterprise.WebAPI/Dockerfile"
     DOCKER_IMAGE: "${DOCKER_REPO}/web-api"
   stage: build
   image:
