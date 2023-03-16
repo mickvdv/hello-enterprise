@@ -15,7 +15,6 @@ services:
 - docker:dind
 
 before_script:
-- docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
 
 
 build:dotnet:
@@ -24,6 +23,7 @@ build:dotnet:
   variables:
     DOCKER_FILE: "${SOLUTION_DIRECTORY}/Dockerfile"
   script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build --file ${DOCKER_FILE} -t ${BUILD_IMAGE} ${SOLUTION_DIRECTORY} 
     - docker push ${BUILD_IMAGE}
 
