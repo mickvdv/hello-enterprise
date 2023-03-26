@@ -1,7 +1,7 @@
 variables:
     SOLUTION_DIRECTORY: '${CI_PROJECT_DIR}/HelloEnterprise'
     TAG_VERSION: '${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}'
-    DOCKER_REPO: registry.gitlab.com/mickvdv/hello-microservice
+    DOCKER_REPO: registry.gitlab.com/mickvdv/hello-enterprise
     BUILD_IMAGE: '${DOCKER_REPO}/build-image:${TAG_VERSION}'
 
 image:
