@@ -1,6 +1,4 @@
-﻿using Database;
-
-namespace HelloEnterprise.Database
+﻿namespace HelloEnterprise.Database
 {
     using System;
     using System.Collections.Generic;

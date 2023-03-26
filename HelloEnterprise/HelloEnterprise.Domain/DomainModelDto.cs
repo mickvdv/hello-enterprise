@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace HelloEnterprise.Domain
 {
     public class DomainModelDto
     {

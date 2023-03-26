@@ -1,7 +1,5 @@
-namespace Company.WebApplication1
+namespace HelloEnterprise.Frontend.Server
 {
-    using Microsoft.AspNetCore.ResponseCompression;
-
     public class Program
     {
         public static void Main(string[] args)

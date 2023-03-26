@@ -1,9 +1,8 @@
-namespace Company.WebApplication1
-{
-    using HelloEnterprise.Frontend.Client;
-    using Microsoft.AspNetCore.Components.Web;
-    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
+namespace HelloEnterprise.Frontend.Client
+{
     public class Program
     {
         public static async Task Main(string[] args)

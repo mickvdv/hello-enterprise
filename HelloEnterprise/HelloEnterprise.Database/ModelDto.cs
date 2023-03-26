@@ -1,4 +1,4 @@
-﻿namespace Database
+﻿namespace HelloEnterprise.Database
 {
     public class ModelDto
     {

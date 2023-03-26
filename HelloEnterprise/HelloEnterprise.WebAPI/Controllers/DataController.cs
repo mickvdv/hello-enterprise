@@ -1,9 +1,9 @@
-using WebContract;
+using System.Collections.Generic;
+using HelloEnterprise.WebContract;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Controllers
+namespace HelloEnterprise.WebAPI.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-
     [ApiController]
     [Route("[controller]")]
     public class DataController : ControllerBase

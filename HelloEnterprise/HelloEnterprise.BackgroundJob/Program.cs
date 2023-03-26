@@ -1,7 +1,5 @@
-namespace Company.WebApplication1
+namespace HelloEnterprise.BackgroundJob
 {
-    using HelloEnterprise.BackgroundJob;
-
     public class Program
     {
         public static void Main(string[] args)
