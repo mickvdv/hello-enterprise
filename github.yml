@@ -1,0 +1,75 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SOLUTION_DIRECTORY: ${{ github.workspace }}/HelloEnterprise
+  TAG_VERSION: ${{ github.ref_slug }}-${{ github.sha }}
+  DOCKER_REPO: registry.gitlab.com/mickvdv/hello-enterprise
+  BUILD_IMAGE: ${{ env.DOCKER_REPO }}/build-image:${{ env.TAG_VERSION }}
+
+jobs:
+  build_dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        run: |
+          echo '{"auths":{"${{ env.CI_REGISTRY }}":{"auth":"$(printf "%s:%s" "${{ env.CI_REGISTRY_USER }}" "${{ env.CI_REGISTRY_PASSWORD }}" | base64 | tr -d '\n')"},"$CI_DEPENDENCY_PROXY_SERVER":{"auth":"$(printf "%s:%s" ${{ env.CI_DEPENDENCY_PROXY_USER }} "${{ env.CI_DEPENDENCY_PROXY_PASSWORD }}" | base64 | tr -d '\n')"}}}' > /kaniko/.docker/config.json
+
+      - name: Build dotnet
+        run: |
+          /kaniko/executor
+            --context ${{ env.SOLUTION_DIRECTORY }}
+            --dockerfile ${{ env.SOLUTION_DIRECTORY }}/Dockerfile
+            --destination ${{ env.BUILD_IMAGE }}
+
+  publish_web_api:
+    runs-on: ubuntu-latest
+    needs: [build_dotnet]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish Web API
+        run: |
+          /kaniko/executor
+            --context ${{ env.SOLUTION_DIRECTORY }}
+            --dockerfile ${{ env.SOLUTION_DIRECTORY }}/HelloEnterprise.WebAPI/Dockerfile
+            --destination ${{ env.DOCKER_REPO }}/web-api:${{ env.TAG_VERSION }}
+            --build-arg BUILD_IMAGE=${{ env.BUILD_IMAGE }}
+
+  publish_background_job:
+    runs-on: ubuntu-latest
+    needs: [build_dotnet]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish Background Job
+        run: |
+          /kaniko/executor
+            --context ${{ env.SOLUTION_DIRECTORY }}
+            --dockerfile ${{ env.SOLUTION_DIRECTORY }}/HelloEnterprise.BackgroundJob/Dockerfile
+            --destination ${{ env.DOCKER_REPO }}/background-job:${{ env.TAG_VERSION }}
+            --build-arg BUILD_IMAGE=${{ env.BUILD_IMAGE }}
+
+  publish_frontend:
+    runs-on: ubuntu-latest
+    needs: [build_dotnet]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish Frontend
+        run: |
+          /kaniko/executor
+            --context ${{ env.SOLUTION_DIRECTORY }}
+            --dockerfile ${{ env.SOLUTION_DIRECTORY }}/HelloEnterprise.Frontend/Server/Dockerfile
+            --destination ${{ env.DOCKER_REPO }}/frontend:${{ env.TAG_VERSION }}
+            --build-arg BUILD_IMAGE=${{ env.BUILD_IMAGE }}
